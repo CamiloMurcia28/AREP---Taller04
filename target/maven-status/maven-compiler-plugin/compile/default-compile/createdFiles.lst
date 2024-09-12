@@ -1,0 +1,11 @@
+edu\eci\arep\virtualizacion\MongoConfig.class
+edu\eci\arep\virtualizacion\AppConfig.class
+edu\eci\arep\virtualizacion\repository\LogRepository.class
+edu\eci\arep\virtualizacion\Virtualizacion.class
+edu\eci\arep\virtualizacion\MongoProperties.class
+edu\eci\arep\virtualizacion\RoundRobin\AppLbRoundRobinApp.class
+edu\eci\arep\virtualizacion\RoundRobin\LoadBalancerController.class
+edu\eci\arep\virtualizacion\controller\LogController.class
+edu\eci\arep\virtualizacion\model\Message.class
+edu\eci\arep\virtualizacion\RoundRobin\WebController.class
+edu\eci\arep\virtualizacion\WebConfig.class
