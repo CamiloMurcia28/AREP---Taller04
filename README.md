@@ -109,6 +109,7 @@ To test the load balancing, make multiple requests to the logging endpoint. You 
 Alongside here is the video that proves how it could be executed when run in a virtual machine on AWS:
 
 ![https://youtu.be/GUfV5_A3eAc](https://youtu.be/GUfV5_A3eAc)
+[video](PruebaAWS.mp4)
 
 
 ## Built With
