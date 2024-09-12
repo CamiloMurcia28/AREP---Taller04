@@ -98,8 +98,10 @@ docker-compose up -d
 
 Once deployed, you can access the Load Balancer at `http://localhost:8080`. 
 
+![image](https://github.com/user-attachments/assets/18bcb79d-0c9e-4dd9-8c41-ec70ec069ca7)
 
 
+![Screen Recording 2024-09-11 231608](https://github.com/user-attachments/assets/ad46e9d5-fc93-45aa-885f-df1ed5db2941)
 
 
 To test the load balancing, make multiple requests to the logging endpoint. You should see the requests being distributed among the different Log Service instances.In this case along the log service executed in docker it is seen that each message is distributed equally amongst the three services.
