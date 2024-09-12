@@ -14,29 +14,28 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author camil
  */
-@Document(collection = "messages")
+@Document
 public class Message {
     @Id
     private String id;
-    private String msg;
+    private String message;
     private LocalDateTime timestamp;
     
     @JsonCreator
-    public Message(@JsonProperty("message") String message,@JsonProperty("message") LocalDateTime timestamp ){
-        this.msg = message;
+    public Message(@JsonProperty("message") String message, @JsonProperty("timestamp") LocalDateTime timestamp ){
+        this.message = message;
         this.timestamp = timestamp;
     }
     
-    public Message(){
-        
+    public Message(){ 
     }
     
     public String getMessage(){
-        return msg;
+        return message;
     }
     
     public void setMessage(String message){
-        this.msg = message;
+        this.message = message;
     }
     
     public LocalDateTime getDate(){
