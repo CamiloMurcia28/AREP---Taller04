@@ -1,114 +1,119 @@
-# TALLER 5: TALLER DE DE MODULARIZACIÓN CON VIRTUALIZACIÓN E INTRODUCCIÓN A DOCKER
+### Escuela Colombiana de Ingenieria - Julio Garavito
+### Arquitectura Empresarial - AREP-LAB03
+# WORKSHOP #4 - Log Service Project with Load Balancer
 
-## Descripción de la aplicación 📖
+## Name: Camilo Nicolas Murcia Espinosa
 
-Este laboratorio se profundiza los conceptos de modulación por medio de virtualización usando Docker. Utiliza el framework [SparkJava](https://sparkjava.com/) para crear un servidor web que se encarga de realizar operaciones matemáticas. La aplicación se compone de un servicio, este es un servicio que realiza operaciones matemáticas como el seno, coseno, una palabra palindrome y la magnitud de un vector.
+## Project Summary
 
-![image](https://github.com/ELS4NTA/AREP/assets/99996670/bb3eab40-486a-4f1e-8f90-b806f52d8886)
+This project implements a Log Service with a Load Balancer using Spring Boot. The system is designed to efficiently handle log requests by distributing the load across multiple instances of the service.
 
-## Comenzando 🚀
+## Architecture
 
-Las siguientes instrucciones le permitirán obtener una copia del proyecto en funcionamiento en su máquina local para fines de desarrollo y prueba.
+The project consists of two main components:
 
-### Requisitos 📋
+1. **Log Service**: A Spring Boot service that handles logging operations.
+2. **MongoDB**: Database which will store all data sent and will be able to store the data in each Log Service created
+3. **app-lb-roundrobin** : code which will be able to perform the algorithm and balancing the data storage between the three log services created
 
-- [Git](https://git-scm.com/) - Control de versiones
-- [Maven](https://maven.apache.org/) - Gestor de dependencias
-- [Java](https://www.oracle.com/java/technologies/downloads/#java17) - Lenguaje de programación
-- [Docker](https://www.docker.com/) - Motor de contenedores
+The general architecture can be represented as follows:
 
-> [!IMPORTANT]
-> Es necesario tener instalado Git, Maven, Docker y Java 17 para poder ejecutar el proyecto.
+![image](https://github.com/user-attachments/assets/6453fe34-4ea9-4f7a-a62c-c776c3ee2771)
 
-## Ejecutando un contenedor Docker 🐳
 
-Para ejecutar la aplicación en un contenedor Docker, ejecute el  comandos:
-
-```docker
-docker run -d -p 8080:46000 --name arep-lab-05 els4nta/arep-lab-05
+```
+C:.
+└───src
+   ├───main
+   │     ├───java
+   │     │     └───edu
+   │     │           └───eci
+   │     │                  └───arep
+   |     └───resources            └───app
+   │     
+   └───test
+         └───java
+                └───edu
+                       └───eci
+                            └───arep
+                                  └───app
 ```
 
-El anterior comando descargará la imagen de Docker del proyecto y luego ejecutará un contenedor con la aplicación.
+## Class Design
 
-![image](https://github.com/ELS4NTA/AREP/assets/99996670/f872a38c-a428-4886-aa60-c4e964f0008f)
+The project is organized into the following main packages and classes:
 
-Diríjase a su navegador de preferencia y vaya a la siguiente dirección: [http://localhost:8080](http://localhost:8080) para ver la aplicación en funcionamiento.
+### Package `edu.eci.arep.app`:
 
-### Instalación 🔧
+1. **`LogServiceApplication`**: Main class that starts the Spring Boot application for the log service.
+2. **`AppConfig`**: Application configuration, including properties for MongoDB connection.
+3. **`WebConfig`**: CORS configuration to allow requests from any origin.
+4. **`LogController`**: REST controller handling log-related HTTP requests. It provides endpoints for logging messages and retrieving log entries.
+5. **`LogEntry`**: Model class representing a log entry. It's annotated for MongoDB document mapping and includes fields for the log message and timestamp.
+6. **`LogRepository`**: An interface extending MongoRepository for handling CRUD operations on LogEntry objects. It includes a custom method to fetch the 10 most recent log entrie
+7. **`MongoConfig`**: Configuration class for MongoDB connection. It sets up the MongoClient and MongoTemplate beans, specifying the MongoDB URI and database name.
+8. **`MongoProperties`**: A configuration properties class for MongoDB settings. It allows for externalized configuration of MongoDB connection details.
 
-Realice los siguientes pasos para clonar el proyecto en su máquina local.
+### Package `edu.eci.arep.app.RoundRobin`:
+
+1. **`AppLbRoundRobinApplication`**: Main class for the load balancer application.
+2. **`LoadBalancerController`**: Handles the load balancing logic.
+3. **`WebController`**: Handles basic web requests, such as the home page.
+
+## Generating Images and Deployment
+
+To generate Docker images and deploy the project, follow these steps:
+
+1. Make sure you have Docker installed on your system.
+
+```
+docker --version
+```
+2. Clone the repository.
+   
+```
+git clone https://github.com/N1CKZ3B/AREP_LAB4
+```
+
+3. Navigate to the folder:
+
+```
+cd AREP_LAB4
+```
+
+4. Run mvn package:
+
+```
+mvn package
+```
+5. execute docker compose:
 
 ```bash
-git clone https://github.com/ELS4NTA/AREP.git
-cd AREP/
-gti checkout taller-5
+docker-compose up -d
 ```
 
-## Ejecutando la aplicación ⚙️
+6. The docker images will be able to be seen in the app.
+   
+## Testing and Deployment
 
-Para ejecutar la aplicación, ejecute el siguiente comando:
+Once deployed, you can access the Load Balancer at `http://localhost:8080`. 
 
-```bash
-mvn clean compile exec:java '-Dexec.mainClass=edu.eci.arep.App'
-```
 
-El anterior comando limpiará las construcciones previas, compilará y luego ejecutará la aplicación.
 
-Diríjase a su navegador de preferencia y vaya a la siguiente dirección: [http://localhost:4567](http://localhost:4567) para ver la aplicación en funcionamiento.
 
-## Generando Javadoc 📦
 
-Para generar la documentación de la aplicación, ejecute el siguiente comando, los archivos Javadoc se generarán en el directorio `target/site/apidocs` dentro del proyecto.
+To test the load balancing, make multiple requests to the logging endpoint. You should see the requests being distributed among the different Log Service instances.In this case along the log service executed in docker it is seen that each message is distributed equally amongst the three services.
 
-```bash
-mvn site
-```
+Alongside here is the video that proves how it could be executed when run in a virtual machine on AWS:
 
-Después de ejecutar el comando anterior, abra el archivo `index.html` que se encuentra en el directorio `target/site/` con su navegador de preferencia luego busque la sección **project reports** y haga click en la opción que dice `Project Javadoc` para ver la documentación de la aplicación.
 
-## Creando y ejecutando un contenedor con Docker 🐳
 
-Para crear una imagen de Docker de la aplicación, ejecute el siguiente comando:
 
-```docker
-docker build -t arep-lab-05 .
-```
+## Built With
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [Docker](https://www.docker.com/) - Generating and storing images
+* [EC2](https://aws.amazon.com/) - cloud and virtual machines
 
-Este comando creará una imagen de Docker con el nombre `arep-lab-05`.
+## Conclusions
 
-![image](https://github.com/ELS4NTA/AREP/assets/99996670/31142cfb-5d38-462f-9e96-0f4b03b1d115)
-
-Para ejecutar la aplicación en un contenedor Docker, ejecute el  comandos:
-
-```docker
-docker run -d -p 8080:46000 --name arep-lab-05 arep-lab-05
-```
-
-![image](https://github.com/ELS4NTA/AREP/assets/99996670/70d6fefd-59ba-490c-91c3-42a5558d4d05)
-
-El anterior comando ejecutará un contenedor con la aplicación mapeando el puerto 46000 del contenedor al puerto 8080 del host. Le pondrá el nombre `arep-lab-05` al contenedor usando la imagen `arep-lab-05`. Diríjase a su navegador de preferencia y vaya a la siguiente dirección: [http://localhost:8080](http://localhost:8080) para ver la aplicación en funcionamiento.
-
-## Arquitectura de la aplicación 📐
-
-Los módulos de la aplicación son los siguientes:
-
-- **CalculatorService**: Es el servicio que se encarga de realizar las operaciones como seno, coseno, una palabra palindrome y la magnitud de un vector.
-
-## Versionado 📌
-
-  ![AREP LAB 05](https://img.shields.io/badge/AREP_LAB_05-v1.0.0-blue)
-
-## Autores ✒️
-
-- **Daniel Santanilla** - [ELS4NTA](https://github.com/ELS4NTA)
-
-## Licencia 📄
-
-[![License: CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
-
-Este proyecto está bajo la licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional (CC BY-SA 4.0) - Ver el archivo [LICENSE](LICENSE) para más detalles.
-
-## Agradecimientos 🎁
-
-- Al profesor [Luis Daniel Benavides Navarro](https://ldbn.is.escuelaing.edu.co/) por compartir sus conocimientos.
-- Al monitor que revisó el laboratorio.
+This project demonstrates the implementation of a scalable logging system using Spring Boot and a load balancer with a Round Robin algorithm. The architecture allows for easy expansion by adding more Log Service instances as needed.
